@@ -228,11 +228,11 @@ const S608 = `500 6.08px ${FONT_EN}`;
 function backBoxes(p, c){
   const U = s => (s||'').toUpperCase();
   return [
-    /* ① 영문 이름 */
-    { x:13.62, y:23.0, lines:[
+    /* ① 영문 이름 — fitR: 우측 컬럼(121.98) 침범 방지용 자동 축소 한계 */
+    { x:13.62, y:23.0, fitR:117.5, lines:[
       {t:U(p.nameEN), f:`700 13.6px ${FONT_EN_D}`, dy:0, ls:-0.27} ]},
     /* ② 국문 이름|직급 + 영문 직함 + 휴대폰/이메일 */
-    { x:13.7, y:31.82, lines:[
+    { x:13.7, y:31.82, fitR:117.5, lines:[
       {t:p.nameKR + (p.posKR ? ' | ' + p.posKR : ''), f:`500 8px ${FONT_KR}`, dy:0, ls:0.96},
       {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:17.56, ls:-0.12},
       {t:p.phone,    f:S608, dy:36.72, dx:0.48, ls:-0.12},
@@ -259,7 +259,18 @@ function drawBackText(ctx, p, c){
     for(const ln of box.lines){
       ctx.font=ln.f;
       ctx.letterSpacing=(ln.ls||0)+'px';  /* 원본 자간(pt) — 캔버스가 pt 좌표계이므로 px 값 그대로 */
-      ctx.fillText(ln.t, box.x+(ln.dx||0), box.y+ln.dy);
+      const x = box.x+(ln.dx||0);
+      /* 자동 맞춤: 템플릿 상정보다 긴 텍스트는 우측 한계(fitR) 안으로 크기 축소 */
+      if(box.fitR){
+        const maxW = box.fitR - x;
+        const w = ctx.measureText(ln.t).width;
+        if(w > maxW){
+          const s = maxW / w;
+          ctx.font = ln.f.replace(/([\d.]+)px/, (_,v)=>(parseFloat(v)*s).toFixed(2)+'px');
+          ctx.letterSpacing = ((ln.ls||0)*s).toFixed(3)+'px';
+        }
+      }
+      ctx.fillText(ln.t, x, box.y+ln.dy);
     }
   ctx.letterSpacing='0px';
 }
