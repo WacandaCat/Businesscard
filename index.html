@@ -115,23 +115,23 @@
       <label><input type="checkbox" id="cropMarks"> 재단선 포함 (여백 추가)</label>
     </div>
     <div class="btns">
-      <button class="btn-primary" id="btnAll" onclick="exportAll()">전체 명단 PDF (앞면 1p + 인원별 정보면)</button>
-      <button class="btn-ghost" id="btnOne" onclick="exportOne()">현재 인원만 PDF (앞면 + 정보면)</button>
+      <button class="btn-primary" id="btnAll" onclick="exportAll()">전체 명단 PDF (공용 뒷면 1p + 인원별 앞면)</button>
+      <button class="btn-ghost" id="btnOne" onclick="exportOne()">현재 인원만 PDF (뒷면 + 앞면)</button>
     </div>
     <p class="note">
-      앞면 전체와 정보면의 SLASH B SLASH® · SLBS® 마크는 원본 인쇄 파일(260121_최종)의
+      공용 뒷면 전체와 앞면(정보면)의 SLASH B SLASH® · SLBS® 마크는 원본 인쇄 파일(260121_최종)의
       벡터를 그대로 삽입합니다 — 확대해도 원본과 동일합니다. 인적 정보 텍스트만 600dpi로 새로 생성됩니다.
     </p>
   </div>
 
   <div class="stage">
     <div class="card-slot">
-      <span class="tag">FRONT — 공용 (원본 벡터)</span>
-      <div class="cardbox" id="frontBox"></div>
+      <span class="tag">FRONT — 정보면</span>
+      <div class="cardbox"><canvas id="back" class="preview"></canvas></div>
     </div>
     <div class="card-slot">
-      <span class="tag">BACK — 정보면</span>
-      <div class="cardbox"><canvas id="back" class="preview"></canvas></div>
+      <span class="tag">BACK — 공용 (원본 벡터)</span>
+      <div class="cardbox" id="frontBox"></div>
     </div>
     <p class="spec">원본 규격 88.5 × 58 mm</p>
   </div>
@@ -321,7 +321,7 @@ async function buildPDF(people){
   const [front]=await doc.embedPdf(b64ToBytes(FRONT_PDF_B64));
   const [backLogo]=await doc.embedPdf(b64ToBytes(BACKLOGO_PDF_B64));
 
-  // 1p: 앞면
+  // 1p: 공용 뒷면 (원본 인쇄 파일과 동일하게 로고면을 첫 페이지로 유지)
   const p1=doc.addPage([pw,ph]);
   p1.drawPage(front,{x:M,y:M});
   if(marks) addCropMarks(p1,M);
