@@ -230,7 +230,7 @@ function backBoxes(p, c){
       {t:U(p.nameEN), f:`800 13.6px ${FONT_EN}`, dy:0} ]},
     /* ② 국문 이름|직급 + 영문 직함 + 휴대폰/이메일 */
     { x:13.7, y:31.8, lines:[
-      {t:p.nameKR + (p.posKR ? ' | ' + p.posKR : ''), f:`500 8px ${FONT_KR}`, dy:0},
+      {t:p.nameKR + (p.posKR ? ' | ' + p.posKR : ''), f:`500 8px ${FONT_KR}`, dy:0, ls:0.96},
       {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:17.2},
       {t:p.phone,    f:S608, dy:36.55, dx:0.48},
       {t:U(p.email), f:S608, dy:44.75, dx:0.48} ]},
@@ -255,8 +255,10 @@ function drawBackText(ctx, p, c){
   for(const box of backBoxes(p, c))
     for(const ln of box.lines){
       ctx.font=ln.f;
+      ctx.letterSpacing=(ln.ls||0)+'px';  /* 원본 자간(pt) — 캔버스가 pt 좌표계이므로 px 값 그대로 */
       ctx.fillText(ln.t, box.x+(ln.dx||0), box.y+ln.dy);
     }
+  ctx.letterSpacing='0px';
 }
 
 function makeBackCanvas(p, c, scale, opt){
