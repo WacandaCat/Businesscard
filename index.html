@@ -98,7 +98,7 @@
       <button class="btn-ghost btn-sm" onclick="clearForm()">새 입력</button>
     </div>
 
-    <h2>명단 <span id="cnt" style="font-weight:400"></span></h2>
+    <h2>예시확인하기 <span id="cnt" style="font-weight:400">(클릭)</span></h2>
     <div class="roster" id="roster"></div>
 
     <h2>공통 정보</h2>
@@ -230,7 +230,6 @@ function drawRoster(){
     d.innerHTML=`<span class="nm">${p.nameEN||'-'}</span><span class="kr">${p.nameKR}${p.posKR?' | '+p.posKR:''}${p.tpl?' (예시탬플릿)':''}</span><button class="del" onclick="delPerson(event,${i})">×</button>`;
     el.appendChild(d);
   });
-  document.getElementById('cnt').textContent=`(${roster.length}명)`;
 }
 
 /* ============ 정보면 텍스트 렌더링 (원본 좌표, 단위 pt)
@@ -261,10 +260,10 @@ function backBoxes(p, c){
             {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:36.92, ls:-0.12},
           ])
         : (p.team ? [
-            {t:U(p.team),    f:`700 6.08px ${FONT_EN}`, dy:17.56, ls:-0.12},
-            {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:25.56, ls:-0.12},
-          ] : [
+            {t:U(p.team),    f:`700 6.08px ${FONT_EN}`, dy:9.56, ls:-0.12},
             {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:17.56, ls:-0.12},
+          ] : [
+            {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:9.56, ls:-0.12},
           ])),
       ...(pickLayout()==='B' ? [
         {t:p.phone,    f:S608, dy:60.93, dx:0.48, ls:-0.12},
