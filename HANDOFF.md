@@ -44,7 +44,10 @@
 | 부산 주소 1·2 | 〃 | 121.98 | 68.35 / 76.55 |
 | 슬로건 1·2 / 사이트 | 〃 | 122.15 | 130.15 / 138.15 / 150.65 |
 
-- 원본 폰트: Helvetica Now Text/Display + Pretendard Variable
+- 원본 폰트 (2026-07-30 새 기준 파일에서 확정): 영문 이름 = Helvetica Now **Display Bold**,
+  영문 직함 = Helvetica Now **Text Bold**, 연락처·주소·슬로건 = Helvetica Now **Text Medium**,
+  국문 = Pretendard Variable. 원본 raw baseline: 이름 23.0 / 국문 31.82 / 직함 49.38 /
+  휴대폰·이메일 68.54·76.54 / 서울 49.42·57.42 / 부산 68.74·76.75 / 슬로건 130.60·138.61 / 사이트 151.03
 - 현재 대체: Helvetica Neue/Arial + Pretendard(CDN). 위 baseline은 대체폰트 기준으로
   원본 렌더와 밴드 비교하여 ±0.5pt 이내로 보정된 값 (원본 raw 값과 다름 주의)
 
