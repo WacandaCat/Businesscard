@@ -92,7 +92,7 @@
     </div>
 
     <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn-primary btn-sm" style="flex:1" onclick="savePerson()">목록에 추가 / 수정</button>
+      <button class="btn-primary btn-sm" style="flex:1" onclick="savePerson()">반영하기</button>
       <button class="btn-ghost btn-sm" onclick="clearForm()">새 입력</button>
     </div>
 
@@ -118,8 +118,7 @@
       <label><input type="checkbox" id="cropMarks"> 재단선 포함 (여백 추가)</label>
     </div>
     <div class="btns">
-      <button class="btn-primary" id="btnAll" onclick="exportAll()">전체 명단 PDF (공용 뒷면 1p + 인원별 앞면)</button>
-      <button class="btn-ghost" id="btnOne" onclick="exportOne()">현재 인원만 PDF (뒷면 + 앞면)</button>
+      <button class="btn-primary" id="btnAll" onclick="exportAll()">PDF 다운받기</button>
     </div>
     <p class="note">
       공용 뒷면 전체와 앞면(정보면)의 SLASH B SLASH® · SLBS® 마크는 원본 인쇄 파일(260121_최종)의
@@ -168,7 +167,7 @@ const COMMON_DEFAULT = {
 
 // 입력 형식 예시용 샘플 1명 — 명단은 저장하지 않음, 사용 시마다 입력 후 PDF 다운로드
 let roster = [
-  {nameEN:'GILDONG', nameKR:'홍길동',  posKR:'이사',    titleEN:'EXECUTIVE DIRECTOR, B2B HQ', phone:'+ 82 10 0000 0001', email:'GILDONG@EXAMPLE.COM'}
+  {nameEN:'GILDONG', nameKR:'홍길동',  posKR:'이사',    titleEN:'EXECUTIVE DIRECTOR, B2B HQ', phone:'+ 82 10 0000 0001', email:'GILDONG@EXAMPLE.COM', tpl:true}
 ];
 let activeIdx = 0;
 
@@ -215,7 +214,7 @@ function drawRoster(){
     const d=document.createElement('div');
     d.className='person'+(i===activeIdx?' active':'');
     d.onclick=()=>selectPerson(i);
-    d.innerHTML=`<span class="nm">${p.nameEN||'-'}</span><span class="kr">${p.nameKR}${p.posKR?' | '+p.posKR:''}</span><button class="del" onclick="delPerson(event,${i})">×</button>`;
+    d.innerHTML=`<span class="nm">${p.nameEN||'-'}</span><span class="kr">${p.nameKR}${p.posKR?' | '+p.posKR:''}${p.tpl?' (예시탬플릿)':''}</span><button class="del" onclick="delPerson(event,${i})">×</button>`;
     el.appendChild(d);
   });
   document.getElementById('cnt').textContent=`(${roster.length}명)`;
@@ -396,13 +395,6 @@ function exportAll(){
     const bytes=await buildPDF(roster);
     const d=new Date(), ymd=`${String(d.getFullYear()).slice(2)}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
     download(bytes, `${ymd}_명함_SLBS_${roster.length}명.pdf`);
-  });
-}
-function exportOne(){
-  const p=formData();
-  if(!p.nameEN && !p.nameKR){ alert('이름을 입력하세요'); return; }
-  withBusy('btnOne', async ()=>{
-    download(await buildPDF([p]), `SLBS_명함_${p.nameEN||p.nameKR}.pdf`);
   });
 }
 
