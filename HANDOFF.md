@@ -26,7 +26,8 @@
    텍스트(BT..ET) 제거 후 벡터만 추출 (`BACKLOGO_PDF_B64`) → 동일하게 벡터 삽입.
 3. **인적 정보 텍스트**: 캔버스에 600dpi 투명 PNG로 렌더 → 벡터 로고 페이지 위에 오버레이.
 4. **미리보기**: 동일 소스의 SVG(`FRONT_SVG`, `BACKLOGO_SVG`) + 캔버스 합성.
-5. 외부 의존성: pdf-lib 1.17.1 (cdnjs), Pretendard Variable (jsdelivr CSS). 빌드/서버 없음.
+5. 외부 의존성 없음 (2026-07-30 셀프호스팅 전환): pdf-lib 1.17.1 → `assets/pdf-lib.min.js`,
+   Pretendard Variable(OFL) → `assets/fonts/PretendardVariable.woff2`. 빌드/서버 없음.
 
 ### 경량화 이력 (재작업 시 참고)
 - 원본 페이지의 `/PieceInfo` (AI 편집 데이터, ~770KB) 제거

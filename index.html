@@ -4,8 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SLBS 명함 생성기</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+/* 셀프호스팅 폰트 (SIL OFL) — CDN 의존 제거 */
+@font-face{
+  font-family:'Pretendard Variable';
+  src:url('./assets/fonts/PretendardVariable.woff2') format('woff2-variations');
+  font-weight:45 930;
+  font-display:swap;
+}
+</style>
+<script src="./assets/pdf-lib.min.js"></script>
 <style>
   :root{--ink:#111;--paper:#f6f5f3;--line:#e2e0dc;--muted:#8a8880}
   *{box-sizing:border-box;margin:0;padding:0}
