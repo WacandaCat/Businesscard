@@ -293,6 +293,21 @@ function render(){
   makeBackCanvas(formData(), commonData(), 5, {canvas:document.getElementById('back')});
 }
 
+/* 캔버스 전용 폰트는 브라우저가 자동 로드하지 않음 → 명시적으로 로드하고 완료 후 재렌더 */
+const FONT_SPECS = [
+  `700 13.6px 'Helvetica Now Display'`,
+  `700 6.08px 'Helvetica Now Text'`,
+  `500 6.08px 'Helvetica Now Text'`,
+  `500 8px 'Pretendard Variable'`,
+];
+let fontsLoaded = null;
+function ensureFonts(){
+  if(!fontsLoaded)
+    fontsLoaded = Promise.all(FONT_SPECS.map(s=>document.fonts.load(s))).catch(()=>{});
+  return fontsLoaded;
+}
+ensureFonts().then(render);
+
 /* ============ PDF 출력 (pdf-lib: 벡터 페이지 삽입 + 텍스트 오버레이) ============ */
 function b64ToBytes(b64){
   const bin=atob(b64), arr=new Uint8Array(bin.length);
@@ -314,6 +329,7 @@ function addCropMarks(page, M){
 }
 
 async function buildPDF(people){
+  await ensureFonts();  // 폰트 미로드 상태로 출력되는 것 방지
   const { PDFDocument } = PDFLib;
   const marks=F('cropMarks').checked;
   const M = marks ? 6*MM2PT : 0;
