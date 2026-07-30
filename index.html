@@ -413,7 +413,8 @@ function exportAll(){
   withBusy('btnAll', async ()=>{
     const bytes=await buildPDF(roster);
     const d=new Date(), ymd=`${String(d.getFullYear()).slice(2)}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
-    download(bytes, `${ymd}_명함_SLBS_${roster.length}명.pdf`);
+    const nm=(roster[0].nameEN||roster[0].nameKR||'명함').toUpperCase();
+    download(bytes, `${ymd}_명함_${nm}${roster.length>1?`_외${roster.length-1}명`:''}.pdf`);
   });
 }
 
