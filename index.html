@@ -86,6 +86,7 @@
       <div class="field"><label>국문 직급 (선택)</label><input id="posKR" placeholder="이사" oninput="render()"></div>
       <div class="field"><label>휴대폰</label><input id="phone" placeholder="+ 82 10 0000 0000" oninput="render()"></div>
     </div>
+    <div class="field"><label>팀 이름 (선택 — 입력 시 직함 위에 표시)</label><input id="team" placeholder="B2B TEAM" oninput="render()"></div>
     <div class="field"><label>영문 직함</label><input id="titleEN" placeholder="EXECUTIVE DIRECTOR, B2B HQ" oninput="render()"></div>
     <div class="field"><label>이메일</label><input id="email" placeholder="NAME@SLASHBSLASH.COM" oninput="render()">
       <div class="hint">영문 이름·직함·이메일은 명함에 대문자로 표기됩니다</div>
@@ -176,12 +177,13 @@ function formData(){
   return {
     nameEN:F('nameEN').value.trim(), nameKR:F('nameKR').value.trim(),
     posKR:F('posKR').value.trim(),   titleEN:F('titleEN').value.trim(),
+    team:F('team').value.trim(),
     phone:F('phone').value.trim(),   email:F('email').value.trim()
   };
 }
 function fillForm(p){
   F('nameEN').value=p.nameEN; F('nameKR').value=p.nameKR; F('posKR').value=p.posKR;
-  F('titleEN').value=p.titleEN; F('phone').value=p.phone; F('email').value=p.email;
+  F('titleEN').value=p.titleEN; F('team').value=p.team||''; F('phone').value=p.phone; F('email').value=p.email;
 }
 function commonData(){
   const c={};
@@ -196,7 +198,7 @@ function savePerson(){
 }
 function clearForm(){
   activeIdx=-1;
-  fillForm({nameEN:'',nameKR:'',posKR:'',titleEN:'',phone:'',email:''});
+  fillForm({nameEN:'',nameKR:'',posKR:'',titleEN:'',team:'',phone:'',email:''});
   drawRoster(); render();
 }
 function selectPerson(i){ activeIdx=i; fillForm(roster[i]); drawRoster(); render(); }
@@ -231,10 +233,16 @@ function backBoxes(p, c){
     /* ① 영문 이름 — fitR: 우측 컬럼(121.98) 침범 방지용 자동 축소 한계 */
     { x:13.62, y:23.0, fitR:117.5, lines:[
       {t:U(p.nameEN), f:`700 13.6px ${FONT_EN_D}`, dy:0, ls:-0.27} ]},
-    /* ② 국문 이름|직급 + 영문 직함 + 휴대폰/이메일 */
+    /* ② 국문 이름|직급 + (팀 이름) + 영문 직함 + 휴대폰/이메일
+       팀 이름 입력 시 직함 자리에 팀이 오고 직함이 한 줄(8pt) 내려감 (우측 주소 2행과 정렬) */
     { x:13.7, y:31.82, fitR:117.5, lines:[
       {t:p.nameKR + (p.posKR ? ' | ' + p.posKR : ''), f:`500 8px ${FONT_KR}`, dy:0, ls:0.96},
-      {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:17.56, ls:-0.12},
+      ...(p.team ? [
+        {t:U(p.team),    f:`700 6.08px ${FONT_EN}`, dy:17.56, ls:-0.12},
+        {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:25.56, ls:-0.12},
+      ] : [
+        {t:U(p.titleEN), f:`700 6.08px ${FONT_EN}`, dy:17.56, ls:-0.12},
+      ]),
       {t:p.phone,    f:S608, dy:36.72, dx:0.48, ls:-0.12},
       {t:U(p.email), f:S608, dy:44.72, dx:0.48, ls:-0.12} ]},
     /* ③ 서울/부산 주소 (단락 2개, 행간 8.0 / 단락 간격 11.25) */
