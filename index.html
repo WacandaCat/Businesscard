@@ -93,6 +93,12 @@
       <div class="hint">영문 이름·직함·이메일은 명함에 대문자로 표기됩니다</div>
     </div>
 
+    <h2>레이아웃</h2>
+    <div class="opts">
+      <label><input type="radio" name="layout" value="A" checked onchange="render()"> 버전 A</label>
+      <label><input type="radio" name="layout" value="B" onchange="render()"> 버전 B</label>
+    </div>
+
     <div style="display:flex;gap:8px;margin-top:4px">
       <button class="btn-primary btn-sm" style="flex:1" onclick="savePerson()">반영하기</button>
       <button class="btn-ghost btn-sm" onclick="clearForm()">새 입력</button>
@@ -114,12 +120,6 @@
         <div class="field"><label>사이트</label><input id="sites" oninput="render()"></div>
       </div>
     </details>
-
-    <h2>레이아웃</h2>
-    <div class="opts">
-      <label><input type="radio" name="layout" value="A" checked onchange="render()"> 버전 A</label>
-      <label><input type="radio" name="layout" value="B" onchange="render()"> 버전 B</label>
-    </div>
 
     <h2>출력</h2>
     <div class="opts">
@@ -465,9 +465,9 @@ function exportAll(){
 }
 
 /* ============ 초기화 ============ */
-for(const k in COMMON_DEFAULT) F(k).placeholder=COMMON_DEFAULT[k];
+for(const k in COMMON_DEFAULT){ F(k).value=COMMON_DEFAULT[k]; F(k).placeholder=COMMON_DEFAULT[k]; }
 document.getElementById('frontBox').innerHTML=FRONT_SVG;
-activeIdx=-1;
+fillForm(roster[0]);
 drawRoster();
 render();
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(render);
