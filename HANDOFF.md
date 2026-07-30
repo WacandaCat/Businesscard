@@ -24,7 +24,9 @@
    원본 대비 렌더 차이 0.0/255 검증 완료.
 2. **정보면 로고 2종** (우상단 SLASH B SLASH® + 중단 SLBS®): 원본 2페이지에서
    텍스트(BT..ET) 제거 후 벡터만 추출 (`BACKLOGO_PDF_B64`) → 동일하게 벡터 삽입.
-3. **인적 정보 텍스트**: 캔버스에 600dpi 투명 PNG로 렌더 → 벡터 로고 페이지 위에 오버레이.
+3. **인적 정보 텍스트**: 캔버스에 1200dpi로 렌더 → 알파 채널을 DeviceGray SMask로,
+   본체는 1×1 DeviceCMYK **K100** 픽셀로 임베드 (먹1도 인쇄용, 재단선도 cmyk K100).
+   pdf-lib 저수준 API(flateStream/register/newXObject) 사용 — `embedTextOverlayCMYK()` 참고.
 4. **미리보기**: 동일 소스의 SVG(`FRONT_SVG`, `BACKLOGO_SVG`) + 캔버스 합성.
 5. 외부 의존성 없음 (2026-07-30 셀프호스팅 전환): pdf-lib 1.17.1 → `assets/pdf-lib.min.js`,
    Pretendard Variable(OFL) → `assets/fonts/PretendardVariable.woff2`. 빌드/서버 없음.

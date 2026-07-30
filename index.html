@@ -123,7 +123,7 @@
     </div>
     <p class="note">
       공용 뒷면 전체와 앞면(정보면)의 SLASH B SLASH® · SLBS® 마크는 원본 인쇄 파일(260121_최종)의
-      벡터를 그대로 삽입합니다 — 확대해도 원본과 동일합니다. 인적 정보 텍스트만 600dpi로 새로 생성됩니다.
+      벡터를 그대로 삽입합니다 — 확대해도 원본과 동일합니다. 인적 정보 텍스트만 1200dpi·K100(먹1도)으로 새로 생성됩니다.
     </p>
   </div>
 
@@ -144,7 +144,7 @@
 /* ============ 규격 (원본 PDF와 동일, 단위 pt) ============ */
 const PT_W = 250.866, PT_H = 164.41;
 const MM2PT = 72/25.4;
-const BACK_DPI = 600;
+const BACK_DPI = 1200;
 const PT2PX = BACK_DPI/72;
 
 const FONT_EN = "'Helvetica Now Text','Helvetica Now Display','Helvetica Neue',Helvetica,Arial,sans-serif";
@@ -314,14 +314,34 @@ function b64ToBytes(b64){
   for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
   return arr;
 }
-function canvasToPngBytes(canvas){
-  return new Promise(res=>canvas.toBlob(async b=>res(new Uint8Array(await b.arrayBuffer())),'image/png'));
+/* 텍스트 오버레이를 DeviceCMYK K100 + SMask(안티앨리어싱 보존)로 임베드 — 먹1도 인쇄용.
+   캔버스 알파 채널 = 글자 커버리지 → SMask, 본체는 1×1 K100 픽셀 (파일 크기 최소화) */
+function embedTextOverlayCMYK(doc, canvas){
+  const w=canvas.width, h=canvas.height;
+  const data=canvas.getContext('2d').getImageData(0,0,w,h).data;
+  const alpha=new Uint8Array(w*h);
+  for(let i=0,j=3;i<alpha.length;i++,j+=4) alpha[i]=data[j];
+  const ctx=doc.context;
+  const smaskRef=ctx.register(ctx.flateStream(alpha,{
+    Type:'XObject', Subtype:'Image', Width:w, Height:h,
+    ColorSpace:'DeviceGray', BitsPerComponent:8 }));
+  return ctx.register(ctx.flateStream(new Uint8Array([0,0,0,255]),{
+    Type:'XObject', Subtype:'Image', Width:1, Height:1,
+    ColorSpace:'DeviceCMYK', BitsPerComponent:8, SMask:smaskRef }));
+}
+function drawOverlay(page, ref, x, y, w, h){
+  const name=page.node.newXObject('TxOv', ref);
+  page.pushOperators(
+    PDFLib.pushGraphicsState(),
+    PDFLib.concatTransformationMatrix(w,0,0,h,x,y),
+    PDFLib.drawObject(name),
+    PDFLib.popGraphicsState());
 }
 function addCropMarks(page, M){
-  const { rgb } = PDFLib;
+  const { cmyk } = PDFLib;
   const len=4*MM2PT, gap=1*MM2PT;
   const x1=M, x2=M+PT_W, y1=M, y2=M+PT_H;
-  const line=(a,b,c,d)=>page.drawLine({start:{x:a,y:b},end:{x:c,y:d},thickness:0.3,color:rgb(0,0,0)});
+  const line=(a,b,c,d)=>page.drawLine({start:{x:a,y:b},end:{x:c,y:d},thickness:0.3,color:cmyk(0,0,0,1)});
   [[x1,y1,-1,-1],[x2,y1,1,-1],[x1,y2,-1,1],[x2,y2,1,1]].forEach(([x,y,sx,sy])=>{
     line(x+sx*gap, y, x+sx*(gap+len), y);
     line(x, y+sy*gap, x, y+sy*(gap+len));
@@ -346,13 +366,13 @@ async function buildPDF(people){
   p1.drawPage(front,{x:M,y:M});
   if(marks) addCropMarks(p1,M);
 
-  // 인원별 정보면: 벡터 로고 + 투명 텍스트 오버레이(600dpi)
+  // 인원별 정보면: 벡터 로고 + K100 텍스트 오버레이(1200dpi, DeviceCMYK)
   for(const p of people){
     const cv=makeBackCanvas(p,c,PT2PX,{transparent:true});
-    const png=await doc.embedPng(await canvasToPngBytes(cv));
+    const ovRef=embedTextOverlayCMYK(doc,cv);
     const pg=doc.addPage([pw,ph]);
     pg.drawPage(backLogo,{x:M,y:M});
-    pg.drawImage(png,{x:M,y:M,width:PT_W,height:PT_H});
+    drawOverlay(pg,ovRef,M,M,PT_W,PT_H);
     if(marks) addCropMarks(pg,M);
   }
   return doc.save();
