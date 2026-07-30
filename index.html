@@ -80,15 +80,15 @@
   <div class="panel">
     <h2>인적 정보</h2>
     <div class="row2">
-      <div class="field"><label>영문 이름</label><input id="nameEN" placeholder="CHANCE" oninput="render()"></div>
+      <div class="field"><label>영문 이름</label><input id="nameEN" placeholder="GILDONG" oninput="render()"></div>
       <div class="field"><label>국문 이름</label><input id="nameKR" placeholder="홍길동" oninput="render()"></div>
     </div>
     <div class="row2">
-      <div class="field"><label>국문 직급 (선택)</label><input id="posKR" placeholder="이사" oninput="render()"></div>
+      <div class="field"><label>국문 직급 (선택)</label><input id="posKR" placeholder="매니저" oninput="render()"></div>
       <div class="field"><label>휴대폰</label><input id="phone" placeholder="+ 82 10 0000 0000" oninput="render()"></div>
     </div>
     <div class="field"><label>팀 이름 (선택 — 입력 시 직함 위에 표시)</label><input id="team" placeholder="B2B TEAM" oninput="render()"></div>
-    <div class="field"><label>영문 직함</label><input id="titleEN" placeholder="EXECUTIVE DIRECTOR, B2B HQ" oninput="render()"></div>
+    <div class="field"><label>영문 직함</label><input id="titleEN" placeholder="MANAGER" oninput="render()"></div>
     <div class="field"><label>이메일</label><input id="email" placeholder="NAME@SLASHBSLASH.COM" oninput="render()">
       <div class="hint">영문 이름·직함·이메일은 명함에 대문자로 표기됩니다</div>
     </div>
@@ -105,10 +105,10 @@
     <details class="common">
       <summary>주소 · 슬로건 · 사이트 (펼치기)</summary>
       <div style="margin-top:10px">
-        <div class="field"><label>서울 주소 1</label><input id="seoul1" oninput="render()"></div>
-        <div class="field"><label>서울 주소 2</label><input id="seoul2" oninput="render()"></div>
-        <div class="field"><label>부산 주소 1</label><input id="busan1" oninput="render()"></div>
-        <div class="field"><label>부산 주소 2</label><input id="busan2" oninput="render()"></div>
+        <div class="field"><label>주소 A-1</label><input id="seoul1" oninput="render()"></div>
+        <div class="field"><label>주소 A-2</label><input id="seoul2" oninput="render()"></div>
+        <div class="field"><label>주소 B-1</label><input id="busan1" oninput="render()"></div>
+        <div class="field"><label>주소 B-2</label><input id="busan2" oninput="render()"></div>
         <div class="field"><label>슬로건 1</label><input id="brand1" oninput="render()"></div>
         <div class="field"><label>슬로건 2</label><input id="brand2" oninput="render()"></div>
         <div class="field"><label>사이트</label><input id="sites" oninput="render()"></div>
@@ -117,8 +117,8 @@
 
     <h2>레이아웃</h2>
     <div class="opts">
-      <label><input type="radio" name="layout" value="A" checked onchange="render()"> 버전 A — 원본 (직함이 이름 아래)</label>
-      <label><input type="radio" name="layout" value="B" onchange="render()"> 버전 B — 직함을 부산 주소와 하단 정렬</label>
+      <label><input type="radio" name="layout" value="A" checked onchange="render()"> 버전 A</label>
+      <label><input type="radio" name="layout" value="B" onchange="render()"> 버전 B</label>
     </div>
 
     <h2>출력</h2>
@@ -195,7 +195,7 @@ function fillForm(p){
 }
 function commonData(){
   const c={};
-  for(const k in COMMON_DEFAULT) c[k]=F(k).value.trim();
+  for(const k in COMMON_DEFAULT) c[k]=F(k).value.trim() || COMMON_DEFAULT[k];
   return c;
 }
 function savePerson(){
@@ -444,9 +444,9 @@ function exportAll(){
 }
 
 /* ============ 초기화 ============ */
-for(const k in COMMON_DEFAULT) F(k).value=COMMON_DEFAULT[k];
+for(const k in COMMON_DEFAULT) F(k).placeholder=COMMON_DEFAULT[k];
 document.getElementById('frontBox').innerHTML=FRONT_SVG;
-fillForm(roster[0]);
+activeIdx=-1;
 drawRoster();
 render();
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(render);
