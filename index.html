@@ -48,8 +48,14 @@
   .person .nm{font-weight:700;min-width:74px}
   .person .kr{color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .person .del{border:none;background:none;color:#c33;font-size:15px;padding:2px 6px;font-weight:400}
-  details.common{margin-top:4px}
-  details.common summary{font-size:13.5px;font-weight:700;color:var(--muted);cursor:pointer;letter-spacing:.08em;padding:4px 0}
+  details.common{margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+  details.common summary{font-size:14px;font-weight:700;color:var(--ink);cursor:pointer;padding:10px 12px;list-style:none;display:flex;align-items:center;gap:9px;user-select:none}
+  details.common summary::-webkit-details-marker{display:none}
+  details.common summary::before{content:'\25b8';color:var(--muted);transition:transform .15s;font-size:12px}
+  details.common[open] summary::before{transform:rotate(90deg)}
+  details.common summary:hover{background:#f3f2ef}
+  details.common summary .sub{font-weight:400;font-size:12px;color:var(--muted);margin-left:auto}
+  details.common .inner{padding:2px 12px 12px}
   .opts{display:flex;flex-direction:column;gap:7px;margin-top:4px}
   .opts label{display:flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer}
   .opts input{width:15px;height:15px;accent-color:var(--ink)}
@@ -109,8 +115,8 @@
 
     <h2>공통 정보</h2>
     <details class="common">
-      <summary>주소 · 슬로건 · 사이트 (펼치기)</summary>
-      <div style="margin-top:10px">
+      <summary>주소 · 슬로건 · 사이트<span class="sub">전체 명함 공통 적용</span></summary>
+      <div class="inner">
         <div class="field"><label>주소 A-1</label><input id="seoul1" oninput="render()"></div>
         <div class="field"><label>주소 A-2</label><input id="seoul2" oninput="render()"></div>
         <div class="field"><label>주소 B-1</label><input id="busan1" oninput="render()"></div>
