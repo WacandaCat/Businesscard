@@ -13,7 +13,12 @@
 ## 배포 / 저장소
 - GitHub: `WacandaCat/Businesscard` (**public**) — 브랜치 `main`
 - Vercel 프로젝트: `slbs-namecard` (team `danny37park`), Git 연결 완료
-- URL: https://slbs-namecard-danny37park.vercel.app (인증 없이 공개 접속)
+- **정식 주소: https://namecard.slbs.shop** (커스텀 도메인, 인증 없이 공개 접속)
+  - DNS: 카페24(ns1/ns2.cafe24.co.kr)에서 `namecard` CNAME → `cname.vercel-dns.com`
+    (`*.slbs.shop` 와일드카드가 쇼핑몰을 가리키므로 이 구체 레코드가 우선함.
+     같은 호스트에 A와 CNAME을 함께 두면 SSL 오류 발생 — 반드시 CNAME 하나만 유지)
+  - SSL은 Vercel이 자동 발급. 2026-07-31 전파 완료 및 200 응답 확인
+- 대체 주소: https://slbs-namecard-danny37park.vercel.app
 - 배포 방식: **`main` push → Vercel 자동 배포**.
   커밋 author는 반드시 `Danny <daniel29park@gmail.com>` (자동배포 이슈 방지 규칙)
 - 배포 보호: ssoProtection = `prod_deployment_urls_and_all_previews`
